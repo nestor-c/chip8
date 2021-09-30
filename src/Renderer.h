@@ -14,6 +14,8 @@ class Renderer{
     private:
         int cols;
         int rows;
+        int width;
+        int height;
         int scale;
         int* display;
         int x;

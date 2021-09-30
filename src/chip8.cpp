@@ -7,12 +7,14 @@ void Chip8::init(){
     startTime = then;
     //loop requires a callback function. Find the callback equivalent in C++
     myRenderer.testRender();
-    myRenderer.render()
-    loop = 
+    myRenderer.render();
+    // Tells browser you want an animation and to call specified function to update animation
+    // before next repaint
+    // loop = requestAnimationFrame(step);
 }
 
 void Chip8::step(){
-    now = Date.now();
+    now = std::time(0);
     elapsed = now - then;
     if (elapsed > fpsInterval){
 

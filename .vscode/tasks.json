@@ -9,7 +9,8 @@
 				"${fileWorkspaceFolder}/src/*.cpp",
 				"-g",
 				"\"$(pkg-config --cflags --libs sdl2)\"",
-				"-Wl,-v",
+				"-Wl",
+				"-v",
 				"-o",
 				"${fileDirname}/../build/${fileBasenameNoExtension}"
 			],

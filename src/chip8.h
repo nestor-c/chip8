@@ -6,9 +6,9 @@
 class Chip8{
     private:
         void init();
+        void step();
         int fps = 60, fpsInterval;
         time_t startTime, now, then, elapsed;
-        void step();
         Renderer myRenderer;
     public:
         Chip8();

@@ -7,73 +7,112 @@
 
 #define CHECK_ERROR(test, message) \
     do { \
-        if((test)) { \
+        if((test))\
+        { \
             fprintf(stderr, "%s\n", (message)); \
             exit(1); \
         } \
     } while(0)
+    
+Renderer::Renderer(int myScale):cols(64*myScale),rows(32*myScale),scale(myScale){
 
-Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),width(cols*scale),height(rows*scale){
-    display = new int[cols*rows];
+    bool leftMouseButtonDown = false;
+    bool quit = false;
+    display = new Uint32[rows*cols]();
+    memset(display, 255, rows * cols * sizeof(Uint32));
     CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
     
-    screen = SDL_CreateWindow("Nestor\'s fancy window check",
-            SDL_WINDOWPOS_CENTERED, 
-            SDL_WINDOWPOS_CENTERED, 
-            cols*scale, 
-            rows*scale,
-            0);
+    CHECK_ERROR(
+        (screen = SDL_CreateWindow
+            (
+                "Pixel Drawing",
+                SDL_WINDOWPOS_CENTERED, 
+                SDL_WINDOWPOS_CENTERED, 
+                cols, 
+                rows,
+                0
+            )
+        )
+             == NULL, 
+             SDL_GetError()
+    );
 
-    //renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);    
+    CHECK_ERROR(
+        (renderer = SDL_CreateRenderer(
+                        screen, 
+                        -1, 
+                        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+                    )
+        ) == NULL, 
+        SDL_GetError()
+    );
 
-    //SDL_Surface* window_surface = SDL_GetWindowSurface(screen);
-    // if (window_surface == NULL) {
-    //     std::cout << SDL_GetError() << std::endl;
-    // }
-    //SDL_FillRect(window_surface, NULL,  SDL_MapRGB( window_surface->format, 0xFF, 0xFF, 0xFF ));
-    //SDL_UpdateWindowSurface(screen);
-    while (true)
+    SDL_Texture* texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC,cols,rows);
+    SDL_Event event;
+   
+    while (!quit)
     {
-      // Get the next event
-      SDL_Event event;
+        SDL_UpdateTexture(texture,NULL, display,cols*sizeof(Uint32));
+      // Get the next events
+      
+      
       if (SDL_PollEvent(&event))
       {
-        if (event.type == SDL_QUIT)
+        std::cout << "X: " << event.motion.x << " Y: " << event.motion.y << std::endl;
+        switch (event.type)
         {
-          // Break out of the loop on quit
-          break;
+            case SDL_QUIT:
+                quit = true;
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    leftMouseButtonDown = false;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    leftMouseButtonDown = true;
+            case SDL_MOUSEMOTION:
+                if (leftMouseButtonDown)
+                {
+                    int mouseX = event.motion.x;
+                    int mouseY = event.motion.y;
+                    display[(mouseY * cols) + mouseX] = 0;
+                }
+                break;
         }
       }
+      SDL_RenderClear(renderer);
+      SDL_RenderCopy(renderer,texture,NULL,NULL);
+      SDL_RenderPresent(renderer);
     }
     
-    // renderer = SDL_CreateRenderer(screen,-1,SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);    
-    // SDL_GetError();
-    //SDL_RenderClear(renderer);
-    //SDL_RenderPresent(renderer);   
+    delete[] display;
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(screen);
     SDL_Quit();
 };
- 
+
 bool Renderer::setPixel(int x,int y){
     if (x > cols){
-        x-=cols;
-    } else if (x<0){
-        x+=cols;
+        x -= cols;
+    } else if (x < 0){
+        x += cols;
     }
-    if(y>rows){
-        y-=rows;
-    } else if (y<0){
-        y+=rows;
+    if(y > rows){
+        y -= rows;
+    } else if (y < 0){
+        y += rows;
     }
-    int pixelLoc = x + (y*rows);
+    int pixelLoc = x + (y*cols);
 
-    display[pixelLoc] ^=1;
+    display[pixelLoc] ^= 1;
 
     return !display[pixelLoc];
 }
 
 void Renderer::clear(){
-    display = new int[cols*rows];
+    display = new Uint32[cols*rows];
 }
 
 void Renderer::render(){

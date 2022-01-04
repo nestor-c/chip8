@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Mac directory settings
+.ds_store
+
+#vs code settings
+.vscode/*
+
+#build info
+build/*

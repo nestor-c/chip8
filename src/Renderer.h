@@ -1,11 +1,11 @@
 #ifndef RENDERER_H
 #define RENDERER_H
-#include "stdio.h"
-#include <SDL2/SDL.h>
+#include <stdio.h>
+#include "SDL.h"
 
 class Renderer{
     public:
-        Renderer(int);
+        Renderer(int myScale=1);
         bool setPixel(int x,int y);
         void clear();
         void render();
@@ -14,10 +14,8 @@ class Renderer{
     private:
         int cols;
         int rows;
-        int width;
-        int height;
         int scale;
-        int* display;
+        Uint32* display;
         int x;
         int y;
         SDL_Window* screen;

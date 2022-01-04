@@ -1,0 +1,7 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/nestorcortes/Desktop/GH/chip8/src'
+g++ -c test.cpp
+g++ -c -I/Users/nestorcortes/Desktop/GH/chip8/dependencies/SDL2.framework/Versions/A/Headers -L /Users/nestorcortes/Desktop/GH/chip8/dependencies/SDL2.framework/Versions/A -lSDL2 -o Renderer.o -Wl,-v Renderer.cpp
+g++ Renderer.o test.o
+make: Leaving directory `/Users/nestorcortes/Desktop/GH/chip8/src'
+ 

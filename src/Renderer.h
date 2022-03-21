@@ -20,5 +20,6 @@ class Renderer{
         int y;
         SDL_Window* screen;
         SDL_Renderer* renderer;
+		SDL_Texture* texture;
 };
 #endif

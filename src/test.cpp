@@ -1,9 +1,7 @@
 #include <iostream>
-#include "Renderer.h"
+#include "chip8.h"
 
 int main(int argc, char** argv){
-   Renderer myRenderer(20);
-   //std::cout << myRenderer.setPixel(5,5) << std::endl;
-   // myRenderer.displayDisplay();
-   return 0;
+   Chip8 test;
+   test.init();
 }

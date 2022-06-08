@@ -1,7 +1,9 @@
-#include <iostream>
-#include "chip8.h"
+#include "keyboard.h"
+#include "Renderer.h"
+#include <iomanip>
 
 int main(int argc, char** argv){
-   Chip8 test;
-   test.init();
+	Renderer myRenderer(10);
+	myRenderer.render();
+	//std::cout<< std::hex << std::setiosflags (std::ios::showbase) << myKeyboard.KEYMAP[86] << std::endl;
 }

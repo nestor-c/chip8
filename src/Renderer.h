@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "SDL.h"
 
+
 class Renderer{
     public:
         Renderer(int myScale=1);
@@ -11,7 +12,10 @@ class Renderer{
         void render();
         void testRender();
         void displayDisplay();
-    private:
+		void print();
+		
+		SDL_Texture* texture;
+        SDL_Renderer* renderer;
         int cols;
         int rows;
         int scale;
@@ -19,7 +23,5 @@ class Renderer{
         int x;
         int y;
         SDL_Window* screen;
-        SDL_Renderer* renderer;
-		SDL_Texture* texture;
 };
 #endif

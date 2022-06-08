@@ -7,8 +7,8 @@ class Chip8{
         void step();
         int fps = 60, fpsInterval;
         unsigned int startTime, now, then, elapsed;
-        Renderer myRenderer;
     public:
+        Renderer myRenderer;
         void init();
         Chip8();
         ~Chip8();

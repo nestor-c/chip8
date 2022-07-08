@@ -1,32 +1,38 @@
 #include "keyboard.h"
 
 Keyboard::Keyboard(){
-	KEYMAP[49] = 0x1; // 1
-	KEYMAP[50] = 0x2; // 2
-	KEYMAP[51] = 0x3; // 3
-	KEYMAP[52] = 0xc; // 4
-	KEYMAP[81] = 0x4; // Q
-	KEYMAP[87] = 0x5; // W
-	KEYMAP[69] = 0x6; // E
-	KEYMAP[82] = 0xD; // R
-	KEYMAP[65] = 0x7; // A
-	KEYMAP[83] = 0x8; // S
-	KEYMAP[68] = 0x9; // D
-	KEYMAP[70] = 0xE; // F
-	KEYMAP[90] = 0xA; // Z
-	KEYMAP[88] = 0x0; // X
-	KEYMAP[67] = 0xB; // C
-	KEYMAP[86] = 0xF; // V	
+	KEYMAP[SDL_SCANCODE_1]= 0x1; // 1
+	KEYMAP[SDL_SCANCODE_2]= 0x2; // 2
+	KEYMAP[SDL_SCANCODE_3]= 0x3; // 3
+	KEYMAP[SDL_SCANCODE_4]= 0xc; // 4
+	KEYMAP[SDL_SCANCODE_Q]= 0x4; // Q
+	KEYMAP[SDL_SCANCODE_W]= 0x5; // W
+	KEYMAP[SDL_SCANCODE_E]= 0x6; // E
+	KEYMAP[SDL_SCANCODE_R]= 0xD; // R
+	KEYMAP[SDL_SCANCODE_A]= 0x7; // A
+	KEYMAP[SDL_SCANCODE_S]= 0x8; // S
+	KEYMAP[SDL_SCANCODE_D]= 0x9; // D
+	KEYMAP[SDL_SCANCODE_F]= 0xE; // F
+	KEYMAP[SDL_SCANCODE_Z]= 0xA; // Z
+	KEYMAP[SDL_SCANCODE_X]= 0x0; // X
+	KEYMAP[SDL_SCANCODE_C]= 0xB; // C
+	KEYMAP[SDL_SCANCODE_V]= 0xF; // V
 }
 
-bool Keyboard::isKeyPressed(int keyCode){
+bool Keyboard::isKeyPressed(SDL_Scancode keyCode){
 	return keysPressed[keyCode];
 }
 
 void Keyboard::onKeyDown(SDL_Event event){
-	if (event.type == SDL_KEYDOWN)
-	{
-		int Key = KEYMAP[event.key.keysym.scancode];
-		if (Key == 49) std::cout << "test complete " << std::endl;
+	int key = KEYMAP[event.key.keysym.scancode];
+	keysPressed[key] = true;
+
+	if (onNextKeyPress != NULL && key){
+		onNextKeyPress(key);
 	}
+}
+
+void Keyboard::onKeyUp(SDL_Event event){
+	int key = KEYMAP[event.key.keysym.scancode];
+	keysPressed[key] = false;
 }

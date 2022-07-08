@@ -1,4 +1,4 @@
-# Prerequisites
+# Prerequisitesg
 *.d
 
 # Compiled Object files
@@ -35,6 +35,7 @@
 .ds_store
 
 #vs code settings
+.vscode
 .vscode/*
 
 #build info

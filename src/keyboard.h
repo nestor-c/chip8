@@ -7,10 +7,11 @@
 class Keyboard{
 	public:
     Keyboard();
-    std::map<int,int> KEYMAP;
-	int* keysPressed;
-	int onNextKeypress;
-	bool isKeyPressed(int);
+    std::map<SDL_Scancode,int> KEYMAP;
+	std::map<int,bool> keysPressed;
+	void onNextKeyPress(int); 
+	bool isKeyPressed(SDL_Scancode);
 	void onKeyDown(SDL_Event event);
+	void onKeyUp(SDL_Event event);
 };
 #endif

@@ -37,6 +37,7 @@
 #vs code settings
 .vscode
 .vscode/*
+**/.vscode/
 
 #build info
 build/*

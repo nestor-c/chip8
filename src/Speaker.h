@@ -17,5 +17,6 @@ class Speaker{
 	Uint32 wavLength;
 	Uint8* wavBuffer;
 	SDL_AudioSpec specs;
+	SDL_AudioDeviceID deviceID;
 };
 #endif

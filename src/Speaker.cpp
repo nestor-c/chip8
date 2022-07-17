@@ -10,16 +10,10 @@ void Speaker::setup(char* myAudio){
 	if(SDL_LoadWAV(myAudio,&specs,&wavBuffer,&wavLength) == NULL ){
 		printf("SDL_LoadWav Failed: %s\n",SDL_GetError());
 	}
-
-	SDL_AudioDeviceID deviceID;
 	
 	if((deviceID = SDL_OpenAudioDevice(NULL,0,&specs,NULL,0)) == 0){
 		printf("SDL_OpenAudioDevice Failed: %s\n",SDL_GetError());
 	}
-	
-// play audio
-	int success = SDL_QueueAudio(deviceID, wavBuffer, wavLength);
-	SDL_PauseAudioDevice(deviceID, 0);
 };
 
 Speaker::~Speaker(){
@@ -27,9 +21,16 @@ Speaker::~Speaker(){
 };
 
 void Speaker::play(){
-	SDL_PauseAudio(0);
+	if(SDL_QueueAudio(deviceID,wavBuffer,wavLength) < 0){
+		printf("SDL_QueueAudio Failed: %s\n",SDL_GetError());
+	}
+	SDL_PauseAudioDevice(deviceID, 0);
+	
+	while(wavLength > 0){
+		SDL_Delay(100);
+	};
 };
 
 void Speaker::pause(){
-	SDL_PauseAudio(1);
+	SDL_PauseAudioDevice(deviceID, 1);
 };

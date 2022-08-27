@@ -11,6 +11,7 @@ class Speaker{
 	void play();
 	void pause();
 	void setup(char* myAudio);
+	std::string dToB(int n);
 	
 	
 	private:
@@ -18,5 +19,6 @@ class Speaker{
 	Uint8* wavBuffer;
 	SDL_AudioSpec specs;
 	SDL_AudioDeviceID deviceID;
+	SDL_AudioFormat Format;
 };
 #endif

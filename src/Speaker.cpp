@@ -14,6 +14,12 @@ void Speaker::setup(char* myAudio){
 	if((deviceID = SDL_OpenAudioDevice(NULL,0,&specs,NULL,0)) == 0){
 		printf("SDL_OpenAudioDevice Failed: %s\n",SDL_GetError());
 	}
+
+	std::cout << "Audio size: " << specs.size << " bytes." << std::endl;
+	std::cout << "Audio Frequency:" <<specs.freq << std::endl;
+	std::cout << "Audio Buffer size in samples: " << specs.samples << std::endl;
+	std::cout << "WAV length: " << wavLength << " bytes."<< std::endl;
+	
 };
 
 Speaker::~Speaker(){
@@ -25,10 +31,8 @@ void Speaker::play(){
 		printf("SDL_QueueAudio Failed: %s\n",SDL_GetError());
 	}
 	SDL_PauseAudioDevice(deviceID, 0);
-	
-	while(wavLength > 0){
-		SDL_Delay(100);
-	};
+	SDL_FreeWAV(wavBuffer);
+	SDL_Delay(wavLength);
 };
 
 void Speaker::pause(){

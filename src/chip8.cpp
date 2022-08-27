@@ -7,11 +7,14 @@ Chip8::Chip8():myRenderer(10){
 Chip8::~Chip8(){}
 
 void Chip8::init(){
-	myRenderer.render();
-    // const int MS = 1000; 
-    // fpsInterval = MS / fps;
-    // then = SDL_GetTicks();
-    // startTime = then;
+    fpsInterval = MS / fps;
+    then = SDL_GetTicks();
+    startTime = then;
+
+	CPU.loadSpritesIntoMemory();
+	cpu.loadRom('BLITZ');
+	loop = requestAnimationFrame(step);
+
     // //loop requires a callback function. Find the callback equivalent in C++
 	// SDL_Event event;
 	
@@ -32,5 +35,8 @@ void Chip8::step(){
     now = SDL_GetTicks();
     elapsed = now - then;
     if (elapsed > fpsInterval){
+		cpu.cycle();
     }
+
+	loop = requestAnimationFrame(step);
 }

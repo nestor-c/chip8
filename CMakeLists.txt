@@ -1,23 +1,18 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.14)
 
 project("chip8 Emulator")
 
-#add_executable(chip8 "src/Renderer.cpp" "src/Renderer.h" "src/chip8.cpp" "src/chip8.h" "src/test.cpp")
-#add_executable(test "src/test.cpp" "src/Renderer.cpp" "src/Renderer.h")
-add_executable(test "src/test.cpp" "src/Speaker.cpp" "src/Speaker.h")
+#add_executable(Test_Speaker "src/Unit Tests/Speaker_Test.cpp" "src/Speaker.cpp")
+#add_executable(Test_Keyboard "src/test.cpp" "src/Renderer.cpp" "src/Renderer.h")
+add_executable(Test_Renderer "src/Unit Tests/Renderer_Test.cpp" "src/Renderer.cpp" "src/headers/Renderer.h")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ")
+#set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -v")
 
 if(APPLE)
-    find_library(SDL2_LIBS SDL2 SDL2main "dependencies/OS X/SDL2.framework/Versions/A/Lib")
-elseif(WIN32)
-    find_library(SDL2_LIBS SDL2 SDL2main "dependencies/WIN32/SDL2.framework/Versions/A/Lib")
+    find_package(SDL2 REQUIRED COMPONENTS SDL2 PATH "dependencies/OS X/SDL2.framework")
 endif()
 
-target_link_libraries(test PUBLIC ${SDL2_LIBS})
-
-if(APPLE)
-    target_include_directories(test PUBLIC "dependencies/OS X/SDL2.framework/Versions/A/Headers")
-elseif(WIN32)
-    target_include_directories(test PUBLIC "dependencies/WIN32/SDL2.framework/Versions/A/Headers")
-endif()
+#target_link_libraries(Test_Speaker PUBLIC SDL2::SDL2)
+#target_link_libraries(Test_Keyboard PUBLIC SDL2::SDL2)
+target_link_libraries(Test_Renderer PUBLIC SDL2::SDL2)

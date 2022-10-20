@@ -1,4 +1,5 @@
 #include "cpu.h"
+CPU::CPU(Renderer r,Keyboard k,Speaker s){};
 
 void CPU::loadSpritesIntoMemory(){
 	 // Array of hex values for each sprite Each sprite is 5 bytes
@@ -32,6 +33,10 @@ void CPU::loadRomIntoMemory(std::vector<uint8_t> program){
 	for(int loc=0;loc< programsize();loc++){
 		memory[0x200+loc] = program[loc];
 	}
+}
+
+void CPU::loadRom(char* romName){
+
 }
 
 void CPU::playSound(){

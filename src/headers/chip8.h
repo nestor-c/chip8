@@ -8,10 +8,10 @@
 
 class Chip8{
     private:
-		CONST RENDERER = new Renderer(10);
-		CONST KEYBOARD = new Keyboard();
-		CONST SPEAKER = new Speaker();
-		CONST CPU = new CPU(RENDERER, KEYBOARD, SPEAKER);
+		Renderer myRenderer(int);
+		Keyboard myKeyboard;
+		Speaker mySpeaker;
+		CPU myCPU;
         void step();
         int fps = 60, fpsInterval;
         unsigned int startTime, now, then, elapsed;

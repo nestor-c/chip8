@@ -1,18 +1,20 @@
 #include "chip8.h"
 #include <iostream>
 
-Chip8::Chip8():myRenderer(10){
-}
+Chip8::Chip8():myRenderer(10), myCPU(myRenderer,myKeyboard,mySpeaker){
+
+}	
 
 Chip8::~Chip8(){}
 
 void Chip8::init(){
+	int MS = 1000;
     fpsInterval = MS / fps;
     then = SDL_GetTicks();
     startTime = then;
 
-	CPU.loadSpritesIntoMemory();
-	cpu.loadRom('BLITZ');
+	myCPU.loadSpritesIntoMemory();
+	myCPU.loadRom('BLITZ');
 	loop = requestAnimationFrame(step);
 
     // //loop requires a callback function. Find the callback equivalent in C++

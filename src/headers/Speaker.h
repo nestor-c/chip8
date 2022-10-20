@@ -10,9 +10,8 @@ class Speaker{
 	Speaker();
 	void play();
 	void pause();
-	void setup(char* myAudio);
+	void setup(std::string myAudio);
 	std::string dToB(int n);
-	
 	
 	private:
 	Uint32 wavLength;
@@ -20,5 +19,6 @@ class Speaker{
 	SDL_AudioSpec specs;
 	SDL_AudioDeviceID deviceID;
 	SDL_AudioFormat Format;
+	uint audioPlayTime();
 };
 #endif

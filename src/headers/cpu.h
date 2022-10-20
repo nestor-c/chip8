@@ -29,6 +29,7 @@ class CPU{
 		int speed = 10;
 		bool paused = false;
 		void loadSpritesIntoMemory();
+		void loadRom(char* romName);
 		void loadRomIntoMemory(std::vector<uint8_t> program);
 		void cycle();
 		void executeInstruction(uint8_t opcode);

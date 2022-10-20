@@ -7,21 +7,21 @@
 class Renderer{
     public:
         Renderer(int myScale=1);
-        bool setPixel(int x,int y);
         void clear();
         void render();
         void testRender();
         void displayDisplay();
 		void print();
-		
+        void freeResources();
+    private:
+        bool setPixel(int x,int y);
 		SDL_Texture* texture;
         SDL_Renderer* renderer;
-        int cols;
-        int rows;
-        int scale;
+        uint cols, rows, windowWidth,windowHeight, scale;
         Uint32* display;
         int x;
         int y;
-        SDL_Window* screen;
+        SDL_Window* window;
+        bool quit=false;
 };
 #endif

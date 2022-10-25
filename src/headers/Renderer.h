@@ -12,8 +12,8 @@ class Renderer{
         void testRender();
         void displayDisplay();
 		void print();
-        void freeResources();
     private:
+        void freeResources();
         bool setPixel(int x,int y);
 		SDL_Texture* texture;
         SDL_Renderer* renderer;

@@ -46,7 +46,7 @@ Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(col
         SDL_GetError()
     );
 
-	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC,windowWidth,windowHeight);
+	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,windowWidth,windowHeight);
 };
 
 void Renderer::freeResources(){
@@ -80,12 +80,23 @@ void Renderer::clear(){
 
 void Renderer::render(){
     while(!quit){
-        SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        SDL_RenderClear(renderer);
-        SDL_UpdateTexture(texture,NULL,display,windowWidth*sizeof(uint));
+        // CHECK_ERROR(
+        //     SDL_SetRenderDrawColor(renderer,255,255,255,255) < 0,
+        //     SDL_GetError()
+        //     );
+        
+        // CHECK_ERROR (
+        //     SDL_RenderClear(renderer)< 0, 
+        //      SDL_GetError()
+        // );
+        testRender();
+        SDL_UpdateTexture(texture,NULL,display,windowWidth*sizeof(Uint32));
+        //SDL_RenderCopy(renderer,texture,NULL,NULL);
+        SDL_RenderPresent(renderer);
         SDL_Event event;
         
         while(SDL_PollEvent(&event)){
+            
             switch(event.type){
                 case SDL_QUIT:
                     quit=true;
@@ -95,6 +106,7 @@ void Renderer::render(){
             }
         }
     }
+    freeResources();
 }
 
 void Renderer::testRender(){

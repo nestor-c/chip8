@@ -18,10 +18,9 @@ class Renderer{
 		SDL_Texture* texture;
         SDL_Renderer* renderer;
         uint cols, rows, windowWidth,windowHeight, scale;
-        Uint32* display;
-        int x;
-        int y;
+        Uint32* displayArr;
+        int x, y;
         SDL_Window* window;
-        bool quit=false;
+        bool quit;
 };
 #endif

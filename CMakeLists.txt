@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
-
+if (APPLE)
+    set (CMAKE_SYSROOT "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk")
+endif()
 project("chip8 Emulator")
 
 #add_executable(Test_Speaker "src/Unit Tests/Speaker_Test.cpp" "src/Speaker.cpp")
 #add_executable(Test_Keyboard "src/test.cpp" "src/Renderer.cpp" "src/Renderer.h")
-add_executable(Test_Renderer "src/Unit Tests/Renderer_Test.cpp" "src/Renderer.cpp" "src/headers/Renderer.h")
+add_executable(Test_Renderer "src/Unit Tests/Renderer_Test.cpp" "src/Renderer.cpp" "src/Renderer.h")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ")
 #set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -v")

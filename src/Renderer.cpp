@@ -1,4 +1,4 @@
-#include "headers/Renderer.h"
+#include "Renderer.h"
 #include <time.h>
 #include <stdlib.h>
 #include <cstdlib>
@@ -14,19 +14,19 @@
         } \
     } while(0)
     
-Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(cols*myScale),windowHeight(rows*myScale){
-    display = new Uint32[rows*cols]();
+Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(cols*myScale),windowHeight(rows*myScale),quit(false){
+    displayArr = new Uint32[rows*cols]();
     //Set display to all white by filling every value to 255
-    memset(display, 255, rows * cols * sizeof(Uint32));
-
+    memset(displayArr, 255, rows * cols * sizeof(Uint32));
+    
     CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
 
     CHECK_ERROR(
         (window = SDL_CreateWindow
             (
                 "My Window",
-                SDL_WINDOWPOS_CENTERED, 
-                SDL_WINDOWPOS_CENTERED, 
+                SDL_WINDOWPOS_UNDEFINED, 
+                SDL_WINDOWPOS_UNDEFINED, 
                 windowWidth, 
                 windowHeight,
                 0
@@ -46,7 +46,7 @@ Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(col
         SDL_GetError()
     );
 
-	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,windowWidth,windowHeight);
+	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,windowWidth,windowHeight);
 };
 
 void Renderer::freeResources(){
@@ -67,36 +67,39 @@ bool Renderer::setPixel(int x,int y){
         y += rows;
     }
     int pixelLoc = x + (y*cols);
-	
-	// 4294967295 -> in Binary (11111111 11111111 11111111 11111111)
-    display[pixelLoc] ^= (Uint32)4294967295;
-
-    return !display[pixelLoc];
+	//0xFFFFFFFF -> Binary(11111111 11111111 11111111 11111111)    
+    displayArr[pixelLoc] ^= (Uint32)0xFFFFFFFF;
+    return !displayArr[pixelLoc];
 }
 
 void Renderer::clear(){
-    display = new Uint32[cols*rows];
+    displayArr = new Uint32[cols*rows];
 }
 
 void Renderer::render(){
     while(!quit){
-        // CHECK_ERROR(
-        //     SDL_SetRenderDrawColor(renderer,255,255,255,255) < 0,
-        //     SDL_GetError()
-        //     );
-        
-        // CHECK_ERROR (
-        //     SDL_RenderClear(renderer)< 0, 
-        //      SDL_GetError()
-        // );
-        testRender();
-        SDL_UpdateTexture(texture,NULL,display,windowWidth*sizeof(Uint32));
-        //SDL_RenderCopy(renderer,texture,NULL,NULL);
+        SDL_SetRenderDrawColor(renderer,255,255,255,255);
+        SDL_RenderClear(renderer);
+        displayArr[1056] = 0;
+        for(int i = 0; i<rows*cols;i++){
+            if(!displayArr[i]){
+                x = (i%cols) * scale;
+                y = floor(i/cols) * scale;
+                SDL_Rect scaledPixel = {x,y,scale,scale};
+                Uint32* pixels=NULL;
+                int pitch;
+                if(SDL_LockTexture(texture,&scaledPixel,(void**) &pixels , &pitch) < 0){
+                    std::cout << "Error locking texture" << std::endl;
+                };
+                
+                memset(pixels,0xFFFF,scale*scale*sizeof(Uint32));
+                SDL_UnlockTexture(texture);
+            }   
+        }
+        SDL_RenderCopy(renderer,texture,NULL,NULL);
         SDL_RenderPresent(renderer);
-        SDL_Event event;
-        
+        SDL_Event event; 
         while(SDL_PollEvent(&event)){
-            
             switch(event.type){
                 case SDL_QUIT:
                     quit=true;

@@ -80,9 +80,9 @@ void Renderer::render(){
     while(!quit){
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
         SDL_RenderClear(renderer);
-        display[1056]=0;     
+        displayArr[1056]=0;     
         for(int i=0;i<rows*cols;i++){
-            if(!display[i]){
+            if(!displayArr[i]){
                 x = (i%cols)*scale;
                 y = floor(i/cols)*scale;
                 SDL_Rect pixelFill = {x,y,scale,scale};

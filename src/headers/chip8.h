@@ -3,22 +3,24 @@
 #include "Renderer.h"
 #include "Speaker.h"
 #include "Keyboard.h"
-#include "CPU.h"
+#include "cpu.h"
 
 
 class Chip8{
-    private:
-		Renderer myRenderer(int);
-		Keyboard myKeyboard;
-		Speaker mySpeaker;
-		CPU myCPU;
-        void step();
-        int fps = 60, fpsInterval;
-        unsigned int startTime, now, then, elapsed;
     public:
-        Renderer myRenderer;
         void init();
         Chip8();
         ~Chip8();
+
+    private:
+		Renderer myRenderer;
+		Keyboard myKeyboard;
+		CPU myCPU;
+		Speaker mySpeaker;
+        SDL_Window* window;
+        void step();
+        int fps = 60, fpsInterval;
+        unsigned int startTime, now, then, elapsed;
+
 };
 #endif

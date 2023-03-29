@@ -29,6 +29,7 @@ void Keyboard::onKeyDown(SDL_Event event){
 
 	if (onNextKeyPress != NULL && key){
 		onNextKeyPress(key);
+		onNextKeyPress = NULL;		
 	}
 }
 

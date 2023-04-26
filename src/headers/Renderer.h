@@ -12,9 +12,9 @@ class Renderer{
         void testRender();
         void displayDisplay();
 		void print();
+        bool setPixel(int x,int y);
     private:
         void freeResources();
-        bool setPixel(int x,int y);
 		SDL_Texture* texture;
         SDL_Renderer* renderer;
         uint cols, rows, windowWidth,windowHeight, scale;

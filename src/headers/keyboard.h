@@ -3,14 +3,15 @@
 #include <iostream>
 #include <map>
 #include "SDL.h"
+#include <functional>
 
 class Keyboard{
 	public:
     Keyboard();
     std::map<SDL_Scancode,int> KEYMAP;
 	std::map<int,bool> keysPressed;
-	void onNextKeyPress(int); 
-	bool isKeyPressed(SDL_Scancode);
+	std::function<void()> onNextKeyPress;
+	bool isKeyPressed(uint8_t m_Key);
 	void onKeyDown(SDL_Event event);
 	void onKeyUp(SDL_Event event);
 };

@@ -2,7 +2,7 @@
 #define CHIP8_H
 #include "Renderer.h"
 #include "Speaker.h"
-#include "Keyboard.h"
+#include "keyboard.h"
 #include "cpu.h"
 
 
@@ -19,7 +19,7 @@ class Chip8{
 		Speaker mySpeaker;
         SDL_Window* window;
         void step();
-        int fps = 60, fpsInterval;
+        int fps, fpsInterval;
         unsigned int startTime, now, then, elapsed;
 
 };

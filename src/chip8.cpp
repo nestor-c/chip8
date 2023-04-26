@@ -1,8 +1,8 @@
 #include "headers/chip8.h"
 #include <iostream>
 
-Chip8::Chip8()
-:myRenderer(10), 
+Chip8::Chip8():fps(60)
+,myRenderer(10), 
 myCPU(myRenderer,myKeyboard,mySpeaker){
 }	
 

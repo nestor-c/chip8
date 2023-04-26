@@ -1,6 +1,6 @@
 #include "headers/cpu.h"
 
-CPU::CPU(Renderer r,Keyboard k,Speaker s){
+CPU::CPU(Renderer r,Keyboard k,Speaker s):paused(false),pc(0x200),speed(10){
     m_stack = new std::vector<uint16_t>();
 };
 
@@ -95,6 +95,7 @@ void CPU::cycle(){
 }
 
 void CPU::executeInstruction(uint8_t opcode){
+    srand(time(NULL));
 
     //Each opcode is 2 bytes long so increment by 2 to get it ready for 
     // the next instruction
@@ -133,7 +134,7 @@ void CPU::executeInstruction(uint8_t opcode){
         pc = (opcode & 0xFFF);
         break;
     case 0x3000:
-        if (v[x] == static_cast<uint8_t>(opcode & 0x00FF)){
+        if (v[x] == (opcode & 0x00FF)){
             pc += 2;
         }
         break;
@@ -153,21 +154,25 @@ void CPU::executeInstruction(uint8_t opcode){
     case 0x7000:
         v[x]+=(opcode & 0xFF);
         break;
-    case 0x8000:
+    case 0x8000:{
         switch (opcode & 0xF) {
-            case 0x0:
+            case 0x0:{
                 v[x] = v[y];
                 break;
-            case 0x1:
+                }
+            case 0x1:{
                 v[x] |= v[y];
                 break;
-            case 0x2:
+            }
+            case 0x2:{
                 v[x] &= v[y];
                 break;
-            case 0x3:
+                }
+            case 0x3:{
                 v[x] ^= v[y];
                 break;
-            case 0x4:
+            }
+            case 0x4:{
                 int sum = (v[x] += v[y]);
                 v[0xF] = 0;
                 if (sum > 0xFF){
@@ -175,30 +180,36 @@ void CPU::executeInstruction(uint8_t opcode){
                 }
                 v[x] = sum;
                 break;
-            case 0x5:
+            }
+            case 0x5:{
                 v[0xF] = 0;
                 if (v[x]>v[y]){
                     v[0xF]=1;
                 }
                 v[x] -= v[y];
                 break;
-            case 0x6:
+            }
+            case 0x6:{
                 v[0xF] = (v[x] & 0x1);
                 v[x] >>= 1;
                 break;
-            case 0x7:
+            }
+            case 0x7:{
                 v[0xF] = 0;
                 if (v[y] > v[x]){
                     v[0xF] = 1;
                 }
                 v[x] = v[y]-v[x];
                 break;
-            case 0xE:
+            }
+            case 0xE:{
                 v[0xF]=(v[x] & 0x80);
                 v[x] <<=1;
                 break;
+            }
         }
         break;
+    }
     case 0x9000:
         if (v[x] != v[y]){
             pc+=2;
@@ -211,7 +222,7 @@ void CPU::executeInstruction(uint8_t opcode){
         pc = (opcode & 0xFFF) + v[0];
         break;
     case 0xC000:
-        int rand = Math.floor(Math.random()*0xFF);
+        int rand = floor(random()*0xFF);
         v[x]= rand & (opcode & 0xFF);
         break;
     case 0xD000:
@@ -219,7 +230,7 @@ void CPU::executeInstruction(uint8_t opcode){
     
         int height = (opcode & 0xF);
 
-        this.v[0xF] = 0;
+       v[0xF] = 0;
 
         for (int row = 0; row < height; row++) {
             int sprite = memory[i + row];
@@ -228,7 +239,7 @@ void CPU::executeInstruction(uint8_t opcode){
                 // If the bit (sprite) is not 0, render/erase the pixel
                 if ((sprite & 0x80) > 0) {
                     // If setPixel returns 1, which means a pixel was erased, set VF to 1
-                    if (renderer.setPixel(v[x] + col, v[y] + row)) {
+                    if (r.setPixel(v[x] + col, v[y] + row)) {
                         v[0xF] = 1;
                     }
                 }
@@ -242,12 +253,14 @@ void CPU::executeInstruction(uint8_t opcode){
     case 0xE000:
         switch (opcode & 0xFF) {
             case 0x9E:
-                if (k.isKeyPressed(v[x])):
+                if (k.isKeyPressed(v[x])){
                     pc+=2;
+                    }
                 break;
             case 0xA1:
-                if (!k.isKeyPressed(v[x])):
+                if (!k.isKeyPressed(v[x])){
                     pc+=2;
+                    }
                 break;
         }
 
@@ -259,7 +272,7 @@ void CPU::executeInstruction(uint8_t opcode){
                 break;
             case 0x0A:
                 paused= true;
-                k.onNextKeyPress = (SDL_Scancode Key)=>{
+                k.onNextKeyPress = [v[x],paused](SDL_Scancode Key)=>{
                     v[x] = key;
                     paused = false;
                 }

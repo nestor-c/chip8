@@ -19,7 +19,8 @@ Keyboard::Keyboard(){
 	KEYMAP[SDL_SCANCODE_V]= 0xF; // V
 }
 
-bool Keyboard::isKeyPressed(SDL_Scancode keyCode){
+bool Keyboard::isKeyPressed(uint8_t m_Key){
+	SDL_Keycode keycode = SDL_GetKeyFromName(m_Key);
 	return keysPressed[keyCode];
 }
 

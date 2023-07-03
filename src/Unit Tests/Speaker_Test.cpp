@@ -1,10 +1,18 @@
-#include "../headers/Speaker.h"
-#include <iomanip>
-#include <iostream>
+#include <SDL.h>
+#include "../Speaker.cpp"
 
-int main(int argc, char** argv){
-	Speaker	speaker;
-	speaker.setup("Assets/test.wav");
-	speaker.play();
+void eventLoop(){
+    bool quit = false;
+    while(!quit){
+        SDL_Event gameEvent;
+        while(SDL_PollEvent(&gameEvent)){
+            if (gameEvent.type == SDL_QUIT) quit = true;
+        }
+    }
 }
- 
+
+int main(){
+    Speaker mySpeaker;
+    mySpeaker.play();
+    eventLoop();
+}

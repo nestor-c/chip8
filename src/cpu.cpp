@@ -108,7 +108,8 @@ void CPU::executeInstruction(uint8_t opcode){
     // We only need the 3rd nibble, so grab the value of the 3rd nibble
     // and shift it right 4 bits to get rid of everything but that 3rd nibble.
     int y = (opcode & 0x00F0) >> 4;
-
+    int height, width, rand;
+    
 
 	switch (opcode & 0xF000) {
     case 0x0000:
@@ -222,13 +223,12 @@ void CPU::executeInstruction(uint8_t opcode){
         pc = (opcode & 0xFFF) + v[0];
         break;
     case 0xC000:
-        int rand = floor(random()*0xFF);
+        rand = floor(random()*0xFF);
         v[x]= rand & (opcode & 0xFF);
         break;
     case 0xD000:
-        const int width = 8;
-    
-        int height = (opcode & 0xF);
+        width = 8;
+        height = (opcode & 0xF);
 
        v[0xF] = 0;
 
@@ -263,7 +263,6 @@ void CPU::executeInstruction(uint8_t opcode){
                     }
                 break;
         }
-
         break;
     case 0xF000:
         switch (opcode & 0xFF) {
@@ -272,10 +271,10 @@ void CPU::executeInstruction(uint8_t opcode){
                 break;
             case 0x0A:
                 paused= true;
-                k.onNextKeyPress = [v[x],paused](SDL_Scancode Key)=>{
-                    v[x] = key;
-                    paused = false;
-                }
+                k.onNextKeyPress = [this,x](int key){
+                    this->v[x] = key;
+                    this->paused = false;
+                    };
                 break;
             case 0x15:
                 delayTimer = v[x];

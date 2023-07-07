@@ -11,10 +11,14 @@ class Chip8{
         void init();
         Chip8();
         ~Chip8();
+        void eventLoop();
+        bool quit = false;
 
     private:
 		Renderer myRenderer;
 		Keyboard myKeyboard;
+        SDL_Event event;
+        
 		CPU myCPU;
 		Speaker mySpeaker;
         SDL_Window* window;

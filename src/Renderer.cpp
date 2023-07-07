@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "headers/Renderer.h"
 #include <time.h>
 #include <stdlib.h>
 #include <cstdlib>
@@ -15,7 +15,7 @@
     } while(0)
     
 Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(cols*myScale),windowHeight(rows*myScale),quit(false){
-    displayArr = new Uint32[rows*cols]();
+    displayArr = new bool[rows*cols]();
     //Set display to all white by filling every value to 255
     memset(displayArr, 255, rows * cols * sizeof(Uint32));
     
@@ -68,43 +68,44 @@ bool Renderer::setPixel(int x,int y){
     }
     int pixelLoc = x + (y*cols);
 	//0xFFFFFFFF -> Binary(11111111 11111111 11111111 11111111)    
-    displayArr[pixelLoc] ^= (Uint32)0xFFFFFFFF;
+    //displayArr[pixelLoc] ^= (Uint32)0xFFFFFFFF;
+    displayArr[pixelLoc] ^= 1;
     return !displayArr[pixelLoc];
 }
 
 void Renderer::clear(){
-    displayArr = new Uint32[cols*rows];
+    displayArr = new bool[cols*rows];
 }
 
 void Renderer::render(){
-    while(!quit){
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
         SDL_RenderClear(renderer);
-        displayArr[1056]=0;     
+       // displayArr[1056]=0;     
         for(int i=0;i<rows*cols;i++){
             if(!displayArr[i]){
                 x = (i%cols)*scale;
                 y = floor(i/cols)*scale;
-                SDL_Rect pixelFill = {x,y,scale,scale};
+                int intScale = (int) scale;
+                SDL_Rect pixelFill = {x,y,intScale,intScale};
                 SDL_SetRenderDrawColor(renderer,0,255,0,255);
                 SDL_RenderFillRect(renderer,&pixelFill);
             }
         }
-        SDL_RenderPresent(renderer);
+        //SDL_RenderPresent(renderer);
         
-        SDL_Event event;
-        while(SDL_PollEvent(&event)){
+        // SDL_Event event;
+        // while(SDL_PollEvent(&event)){
             
-            switch(event.type){
-                case SDL_QUIT:
-                    quit=true;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    freeResources();
+        //     switch(event.type){
+        //         case SDL_QUIT:
+        //             quit=true;
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // }
+    //}
+    //freeResources();
 }
 
 void Renderer::testRender(){

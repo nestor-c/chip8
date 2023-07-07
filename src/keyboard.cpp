@@ -1,6 +1,6 @@
-#include "keyboard.h"
+#include "headers/keyboard.h"
 
-Keyboard::Keyboard(){
+Keyboard::Keyboard():onNextKeyPress(nullptr){
 	KEYMAP[SDL_SCANCODE_1]= 0x1; // 1
 	KEYMAP[SDL_SCANCODE_2]= 0x2; // 2
 	KEYMAP[SDL_SCANCODE_3]= 0x3; // 3
@@ -20,8 +20,7 @@ Keyboard::Keyboard(){
 }
 
 bool Keyboard::isKeyPressed(uint8_t m_Key){
-	SDL_Keycode keycode = SDL_GetKeyFromName(m_Key);
-	return keysPressed[keyCode];
+	return keysPressed[m_Key];
 }
 
 void Keyboard::onKeyDown(SDL_Event event){

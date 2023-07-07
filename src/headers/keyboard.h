@@ -10,7 +10,7 @@ class Keyboard{
     Keyboard();
     std::map<SDL_Scancode,int> KEYMAP;
 	std::map<int,bool> keysPressed;
-	std::function<void()> onNextKeyPress;
+	std::function<void(int)> onNextKeyPress;
 	bool isKeyPressed(uint8_t m_Key);
 	void onKeyDown(SDL_Event event);
 	void onKeyUp(SDL_Event event);

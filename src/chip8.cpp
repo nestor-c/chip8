@@ -1,9 +1,8 @@
 #include "headers/chip8.h"
 #include <iostream>
 
-Chip8::Chip8():fps(60)
-,myRenderer(10), 
-myCPU(myRenderer,myKeyboard,mySpeaker){
+Chip8::Chip8():fps(60), 
+myCPU(myRenderer(10),myKeyboard,mySpeaker){
 }	
 
 Chip8::~Chip8(){}
@@ -22,7 +21,6 @@ void Chip8::step(){
     if (elapsed > fpsInterval){
         myCPU.cycle();
     }
-
     eventLoop();
     SDL_Delay(1);
     step();
@@ -36,5 +34,4 @@ void Chip8::eventLoop(){
             }
         }
     }
-
 }

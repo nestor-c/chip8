@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.14)
 # endif()
 project("chip8 Emulator")
 
-add_executable(myEmulator "src/chip8.cpp" "src/cpu.cpp" "src/keyboard.cpp" "src/Renderer.cpp" "src/Speaker.cpp")
+add_executable(myEmulator "src/Unit Tests/chip8_Test.cpp" "src/chip8.cpp" "src/cpu.cpp" "src/keyboard.cpp" "src/Renderer.cpp" "src/Speaker.cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
 #set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -v")
 

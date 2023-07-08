@@ -1,6 +1,6 @@
-#include "chip8.cpp"
+#include "../headers/chip8.h"
 
 int main(){
-    chip8 myVirtualMachine;
+    Chip8 myVirtualMachine;
     myVirtualMachine.init();
 }

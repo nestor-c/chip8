@@ -2,7 +2,7 @@
 #define KEYBOARD_H
 #include <iostream>
 #include <map>
-#include "SDL.h"
+#include <SDL2/SDL.h>
 #include <functional>
 
 class Keyboard{

@@ -15,7 +15,7 @@ class Chip8{
         bool quit = false;
 
     private:
-		Renderer myRenderer(int);
+		Renderer myRenderer;
 		Keyboard myKeyboard;
         SDL_Event event;
         

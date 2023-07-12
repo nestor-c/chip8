@@ -17,9 +17,7 @@
 Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(cols*myScale),windowHeight(rows*myScale),quit(false){
     displayArr = new bool[rows*cols]();
     //Set display to all white by filling every value to 255
-    memset(displayArr, 255, rows * cols * sizeof(Uint32));
-   
-    std::cout << "Test: Do we get this far?" << std::endl;
+    memset(displayArr, 0, rows * cols * sizeof(bool));
 
     CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
 

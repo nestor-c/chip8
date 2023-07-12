@@ -2,7 +2,7 @@
 #define SPEAKER_H
 #include <string>
 #include <iostream>
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 class Speaker{
 	public:

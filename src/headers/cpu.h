@@ -33,7 +33,7 @@ class CPU{
 		void loadRom(std::string romName);
 		void loadProgramIntoMemory(std::vector<uint8_t> program);
 		void cycle();
-		void executeInstruction(uint8_t opcode);
+		void executeInstruction(u_int16_t opcode);
 		void playSound();
 		void updateTimers();
 };

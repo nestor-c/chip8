@@ -7,6 +7,7 @@
 class Renderer{
     public:
         Renderer(int myScale=1);
+        ~Renderer();
         void clear();
         void render();
         void testRender();

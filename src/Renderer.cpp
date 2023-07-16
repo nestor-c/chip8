@@ -49,6 +49,10 @@ Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(col
 	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,windowWidth,windowHeight);
 };
 
+Renderer::~Renderer(){
+    freeResources();
+}
+
 void Renderer::freeResources(){
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

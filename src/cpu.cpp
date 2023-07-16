@@ -1,6 +1,6 @@
 #include "headers/cpu.h"
 
-CPU::CPU(Renderer r,Keyboard k,Speaker s):paused(false),pc(0x200),speed(10){
+CPU::CPU(Renderer r,Keyboard k,Speaker s):r(r),k(k),s(s),paused(false),pc(0x200),speed(10), v(16){
     m_stack = new std::vector<uint16_t>();
 };
 
@@ -81,7 +81,7 @@ void CPU::cycle(){
     //Loop that handles execution
     for (int i = 0; i < speed; i++) {
         if (!paused) {
-            int opcode = (memory[pc] << 8 | memory[pc + 1]);
+            u_int16_t opcode = (memory[pc] << 8 | memory[pc + 1]);
             executeInstruction(opcode);
         }
     }
@@ -94,7 +94,7 @@ void CPU::cycle(){
     r.render();
 }
 
-void CPU::executeInstruction(uint8_t opcode){
+void CPU::executeInstruction(u_int16_t opcode){
     srand(time(NULL));
 
     //Each opcode is 2 bytes long so increment by 2 to get it ready for 
@@ -271,7 +271,7 @@ void CPU::executeInstruction(uint8_t opcode){
                 break;
             case 0x0A:
                 paused= true;
-                k.onNextKeyPress = [this,x](int key){
+               k.onNextKeyPress = [this,x](int key){
                     this->v[x] = key;
                     this->paused = false;
                     };

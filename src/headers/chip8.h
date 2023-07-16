@@ -13,18 +13,19 @@ class Chip8{
         ~Chip8();
         void eventLoop();
         bool quit = false;
+		CPU myCPU;
 
     private:
 		Renderer myRenderer;
 		Keyboard myKeyboard;
-        SDL_Event event;
-        
-		CPU myCPU;
 		Speaker mySpeaker;
+        SDL_Event event;
         SDL_Window* window;
         void step();
         int fps, fpsInterval;
         unsigned int startTime, now, then, elapsed;
+    protected: 
+
 
 };
 #endif

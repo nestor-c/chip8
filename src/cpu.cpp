@@ -1,6 +1,6 @@
 #include "headers/cpu.h"
 
-CPU::CPU(Renderer cpu_Renderer,Keyboard cpu_Keyboard,Speaker cpu_Speaker):paused(false),pc(0x200),speed(10), v(16), debug(true){
+CPU::CPU(Renderer* chip8_Renderer,Keyboard* chip8_Keyboard,Speaker* chip8_Speaker):cpu_Renderer(chip8_Renderer),cpu_Keyboard(chip8_Keyboard),cpu_Speaker(chip8_Speaker),paused(false),pc(0x200),speed(10), v(16), debug(true){
     m_stack = new std::vector<uint16_t>();
     count = 0;
 };
@@ -63,9 +63,9 @@ void CPU::loadRom(std::string romName){
 
 void CPU::playSound(){
 	   if (soundTimer > 0) {
-        cpu_Speaker.play();
+        cpu_Speaker->play();
     } else {
-        cpu_Speaker.pause();
+        cpu_Speaker->pause();
     }
 };
 
@@ -93,7 +93,7 @@ void CPU::cycle(){
     }
 
     playSound();
-    cpu_Renderer.render();
+    cpu_Renderer->render();
 }
 
 void CPU::executeInstruction(u_int16_t opcode){
@@ -119,9 +119,8 @@ void CPU::executeInstruction(u_int16_t opcode){
           
         switch (opcode) {
             case 0x00E0:
-              
                 //clear display 
-                cpu_Renderer.clear(); 
+                cpu_Renderer->clear(); 
                 break;
             case 0x00EE:
             	             // return from subroutine      
@@ -256,7 +255,7 @@ void CPU::executeInstruction(u_int16_t opcode){
                     // If setPixel returns 1, which means a pixel was erased, set VF to 1
                     // std::cout << "x: " << v[x] + col << ", " <<std::endl; 
                     // std::cout << "Y: " << v[y] + row << std::endl << std::endl;
-                        if (cpu_Renderer.setPixel(v[x] + col, v[y] + row)) {
+                        if (cpu_Renderer->setPixel(v[x] + col, v[y] + row)) {
                         v[0xF] = 1;
                     }
                 }
@@ -269,12 +268,12 @@ void CPU::executeInstruction(u_int16_t opcode){
     case 0xE000:
     	        switch (opcode & 0xFF) {
             case 0x9E:
-            	                if (cpu_Keyboard.isKeyPressed(v[x])){
+            	                if (cpu_Keyboard->isKeyPressed(v[x])){
                     pc+=2;
                     }
                 break;
             case 0xA1:
-            	                if (!cpu_Keyboard.isKeyPressed(v[x])){
+            	                if (!cpu_Keyboard->isKeyPressed(v[x])){
                     pc+=2;
                     }
                 break;
@@ -287,7 +286,7 @@ void CPU::executeInstruction(u_int16_t opcode){
                 break;
             case 0x0A:
             	                paused = true;
-                cpu_Keyboard.onNextKeyPress = [this, x](int key){
+                cpu_Keyboard->onNextKeyPress = [this, x](int key){
                     this->v[x] = key;
                     this->paused = false;
                     };

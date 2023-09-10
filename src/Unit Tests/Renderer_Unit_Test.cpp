@@ -22,5 +22,5 @@ int main(int argc, char** argv){
 	Renderer myRenderer(10);
 	myRenderer.setPixel(4,32);
 	gameLoop(myRenderer);
-	myRenderer.debug_printDisplay();
+	//myRenderer.debug_printDisplay();
 }

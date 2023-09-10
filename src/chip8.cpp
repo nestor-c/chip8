@@ -1,7 +1,7 @@
 #include "headers/chip8.h"
 #include <iostream>
 
-Chip8::Chip8():quit(false), fps(60), myRenderer(10), myCPU(myRenderer,myKeyboard,mySpeaker){
+Chip8::Chip8():quit(false), fps(60), myRenderer(10), myCPU(&myRenderer,&myKeyboard,&mySpeaker){
         
 }	
 

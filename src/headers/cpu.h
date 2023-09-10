@@ -4,7 +4,6 @@
 #include "Speaker.h"
 #include "Renderer.h"
 #include <vector>
-//#include <stdint.h>
 #include <cstdint>
 #include <cmath>
 #include <fstream>
@@ -12,10 +11,10 @@
 class CPU{
 	public:
 		int count;
-		Renderer cpu_Renderer;
-		Keyboard cpu_Keyboard;
-		Speaker cpu_Speaker;
-		CPU(Renderer,Keyboard,Speaker);
+		Renderer* cpu_Renderer;
+		Keyboard* cpu_Keyboard;
+		Speaker* cpu_Speaker;
+		CPU(Renderer*,Keyboard*,Speaker*);
 		//4K bytes of memory
 		u_int8_t memory[4096];
 		//16 1-byte registers

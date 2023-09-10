@@ -41,3 +41,6 @@
 
 #build info
 build/*
+
+#cmake files
+CMakeFiles/*

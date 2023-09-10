@@ -11,10 +11,11 @@
 
 class CPU{
 	public:
-		Renderer r;
-		Keyboard k;
-		Speaker s;
-		CPU(Renderer r,Keyboard k,Speaker s);
+		int count;
+		Renderer cpu_Renderer;
+		Keyboard cpu_Keyboard;
+		Speaker cpu_Speaker;
+		CPU(Renderer,Keyboard,Speaker);
 		//4K bytes of memory
 		u_int8_t memory[4096];
 		//16 1-byte registers
@@ -36,5 +37,6 @@ class CPU{
 		void executeInstruction(u_int16_t opcode);
 		void playSound();
 		void updateTimers();
+		bool debug;
 };
 #endif  

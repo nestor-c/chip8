@@ -2,7 +2,7 @@
 #include <string>
 
 int main(){
-     std::string BLINKY = "build/roms/BLINKY";
+     std::string BLINKY = "BLINKY";
     Chip8 myVirtualMachine;
-    myVirtualMachine.myCPU.loadRom(BLINKY);
-    }
+    myVirtualMachine.init();
+}

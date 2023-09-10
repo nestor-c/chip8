@@ -1,7 +1,8 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include <iomanip>
+#include </usr/local/opt/sdl2/include/SDL2/SDL.h>
 
 
 class Renderer{
@@ -10,10 +11,10 @@ class Renderer{
         ~Renderer();
         void clear();
         void render();
-        void testRender();
         void displayDisplay();
 		void print();
         bool setPixel(int x,int y);
+        void debug_printDisplay();
     private:
         void freeResources();
 		SDL_Texture* texture;

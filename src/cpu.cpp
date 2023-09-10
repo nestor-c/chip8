@@ -1,7 +1,8 @@
 #include "headers/cpu.h"
 
-CPU::CPU(Renderer r,Keyboard k,Speaker s):r(r),k(k),s(s),paused(false),pc(0x200),speed(10), v(16){
+CPU::CPU(Renderer cpu_Renderer,Keyboard cpu_Keyboard,Speaker cpu_Speaker):paused(false),pc(0x200),speed(10), v(16), debug(true){
     m_stack = new std::vector<uint16_t>();
+    count = 0;
 };
 
 void CPU::loadSpritesIntoMemory(){
@@ -33,7 +34,7 @@ void CPU::loadSpritesIntoMemory(){
         memory[i] = SPRITES[i];
     }
 }
-
+    
 void CPU::loadProgramIntoMemory(std::vector<uint8_t> program){
 	for(int loc=0;loc< program.size();loc++){
 		memory[0x200+loc] = program[loc];
@@ -41,7 +42,8 @@ void CPU::loadProgramIntoMemory(std::vector<uint8_t> program){
 }
 
 void CPU::loadRom(std::string romName){
-        std::ifstream romFile("build/roms/"+romName,std::ios_base::binary|std::ios_base::ate);
+        std::ifstream romFile("roms/"+romName,std::ios_base::binary|std::ios_base::ate);
+
         if (!romFile.is_open()){
             throw std::runtime_error ("Error opening the given ROM file. Try again or try another ROM");
         }
@@ -61,9 +63,9 @@ void CPU::loadRom(std::string romName){
 
 void CPU::playSound(){
 	   if (soundTimer > 0) {
-        s.play();
+        cpu_Speaker.play();
     } else {
-        s.pause();
+        cpu_Speaker.pause();
     }
 };
 
@@ -91,35 +93,38 @@ void CPU::cycle(){
     }
 
     playSound();
-    r.render();
+    cpu_Renderer.render();
 }
 
 void CPU::executeInstruction(u_int16_t opcode){
-    srand(time(NULL));
 
+    
+
+    srand(time(NULL));
     //Each opcode is 2 bytes long so increment by 2 to get it ready for 
     // the next instruction
-    pc += 2;
-
+    //00000000 00000000
+    pc += 2;    
     // We only need the 2nd nibble, so grab the value of the 2nd nibble
     // and shift it right 8 bits to get rid of everything but that 2nd nibble.
     int x = (opcode & 0x0F00) >> 8;
-
     // We only need the 3rd nibble, so grab the value of the 3rd nibble
     // and shift it right 4 bits to get rid of everything but that 3rd nibble.
     int y = (opcode & 0x00F0) >> 4;
-    int height, width, rand;
-    
+    int height, width;
+    int rand;
 
-	switch (opcode & 0xF000) {
-    case 0x0000:
+    switch (opcode & 0xF000) {
+        case 0x0000:
+          
         switch (opcode) {
             case 0x00E0:
-            //clear display 
-            r.clear(); 
+              
+                //clear display 
+                cpu_Renderer.clear(); 
                 break;
             case 0x00EE:
-             // return from subroutine      
+            	             // return from subroutine      
                 if (!m_stack->empty()){
                     pc =  m_stack->back();
                     m_stack->pop_back();
@@ -128,82 +133,94 @@ void CPU::executeInstruction(u_int16_t opcode){
         }
         break;
     case 0x1000:
-        pc = (opcode & 0xFFF);
+    	        pc = (opcode & 0xFFF);
         break;
     case 0x2000:
-        m_stack->push_back(pc);
+    	        m_stack->push_back(pc);
         pc = (opcode & 0xFFF);
         break;
     case 0x3000:
-        if (v[x] == (opcode & 0x00FF)){
+    	        if (v[x] == (opcode & 0x00FF)){
             pc += 2;
         }
         break;
     case 0x4000:
-        if (v[x]!= (uint8_t)(opcode & 0xFF)){
+    	        if (v[x]!= (uint8_t)(opcode & 0xFF)){
             pc += 2;
         }
         break;
     case 0x5000:
-        if (v[x]==v[y]){
+    	        if (v[x]==v[y]){
             pc += 2;
         }
         break;
     case 0x6000:
-        v[x]= (opcode & 0xFF);
+    	        v[x]= (opcode & 0xFF);
         break;
     case 0x7000:
-        v[x]+=(opcode & 0xFF);
+    	        v[x]+=(opcode & 0xFF);
         break;
-    case 0x8000:{
+    case 0x8000:
+    	{
         switch (opcode & 0xF) {
-            case 0x0:{
+            case 0x0:
+            	{
                 v[x] = v[y];
                 break;
                 }
-            case 0x1:{
+            case 0x1:
+            	{
                 v[x] |= v[y];
                 break;
             }
-            case 0x2:{
+            case 0x2:
+            	{
                 v[x] &= v[y];
                 break;
                 }
-            case 0x3:{
+            case 0x3:
+            	{
                 v[x] ^= v[y];
                 break;
             }
-            case 0x4:{
+            case 0x4:
+            	{
                 int sum = (v[x] += v[y]);
                 v[0xF] = 0;
                 if (sum > 0xFF){
                     v[0xF] = 1;
                 }
+                //Due to our vector being of type uint8_t only the lowest 8 bits of our sum are stored in v[x]
+                //Verify this
                 v[x] = sum;
                 break;
             }
-            case 0x5:{
+            case 0x5:
+            	{
                 v[0xF] = 0;
-                if (v[x]>v[y]){
+                if (v[x]<v[y]){
                     v[0xF]=1;
                 }
                 v[x] -= v[y];
                 break;
             }
-            case 0x6:{
+            case 0x6:
+            	{
                 v[0xF] = (v[x] & 0x1);
                 v[x] >>= 1;
                 break;
             }
-            case 0x7:{
+            case 0x7:
+            	{
                 v[0xF] = 0;
-                if (v[y] > v[x]){
+                if (v[y] < v[x]){
                     v[0xF] = 1;
                 }
                 v[x] = v[y]-v[x];
                 break;
             }
-            case 0xE:{
+            case 0xE:
+            	{
                 v[0xF]=(v[x] & 0x80);
                 v[x] <<=1;
                 break;
@@ -212,38 +229,37 @@ void CPU::executeInstruction(u_int16_t opcode){
         break;
     }
     case 0x9000:
-        if (v[x] != v[y]){
+    	        if (v[x] != v[y]){
             pc+=2;
         }
         break;
     case 0xA000:
-        i = (opcode & 0xFFF);
+    	        i = (opcode & 0xFFF);
         break;
     case 0xB000:
-        pc = (opcode & 0xFFF) + v[0];
+    	        pc = (opcode & 0xFFF) + v[0];
         break;
     case 0xC000:
-        rand = floor(random()*0xFF);
+    	        rand = floor(random()*0xFF);
         v[x]= rand & (opcode & 0xFF);
         break;
     case 0xD000:
-        width = 8;
+    	        width = 8;
         height = (opcode & 0xF);
-
-       v[0xF] = 0;
+        v[0xF] = 0;
 
         for (int row = 0; row < height; row++) {
             int sprite = memory[i + row];
-
             for (int col = 0; col < width; col++) {
                 // If the bit (sprite) is not 0, render/erase the pixel
                 if ((sprite & 0x80) > 0) {
                     // If setPixel returns 1, which means a pixel was erased, set VF to 1
-                    if (r.setPixel(v[x] + col, v[y] + row)) {
+                    // std::cout << "x: " << v[x] + col << ", " <<std::endl; 
+                    // std::cout << "Y: " << v[y] + row << std::endl << std::endl;
+                        if (cpu_Renderer.setPixel(v[x] + col, v[y] + row)) {
                         v[0xF] = 1;
                     }
                 }
-
                 // Shift the sprite left 1. This will move the next next col/bit of the sprite into the first position.
                 // Ex. 10010000 << 1 will become 0010000
                 sprite <<= 1;
@@ -251,57 +267,57 @@ void CPU::executeInstruction(u_int16_t opcode){
         }
         break;
     case 0xE000:
-        switch (opcode & 0xFF) {
+    	        switch (opcode & 0xFF) {
             case 0x9E:
-                if (k.isKeyPressed(v[x])){
+            	                if (cpu_Keyboard.isKeyPressed(v[x])){
                     pc+=2;
                     }
                 break;
             case 0xA1:
-                if (!k.isKeyPressed(v[x])){
+            	                if (!cpu_Keyboard.isKeyPressed(v[x])){
                     pc+=2;
                     }
                 break;
         }
         break;
     case 0xF000:
-        switch (opcode & 0xFF) {
+    	        switch (opcode & 0xFF) {
             case 0x07:
-                v[x] = delayTimer;
+            	                v[x] = delayTimer;
                 break;
             case 0x0A:
-                paused= true;
-               k.onNextKeyPress = [this,x](int key){
+            	                paused = true;
+                cpu_Keyboard.onNextKeyPress = [this, x](int key){
                     this->v[x] = key;
                     this->paused = false;
                     };
                 break;
             case 0x15:
-                delayTimer = v[x];
+            	                delayTimer = v[x];
                 break;
             case 0x18:
-                soundTimer = v[x];
+            	                soundTimer = v[x];
                 break;
             case 0x1E:
-                i += v[x];
+            	                i += v[x];
                 break;
             case 0x29:
-                i = v[x]*5;
+            	                i = v[x]*5;
                 break;
             case 0x33:
-                memory[i]=v[x]/100;
+            	                memory[i]=v[x]/100;
 
                 memory[i+1] = (v[x]%100)/10;
 
                 memory[i+2] = (v[x]%10);
                 break;
             case 0x55:
-                for(int registerIndex=0; registerIndex < x; registerIndex++){
+            	                for(int registerIndex=0; registerIndex < x; registerIndex++){
                     memory[i+registerIndex] = v[registerIndex];
                 }
                 break;
             case 0x65:
-                for(int registerIndex=0; registerIndex < x; registerIndex++){
+            	                for(int registerIndex=0; registerIndex < x; registerIndex++){
                     v[registerIndex] = memory[i+registerIndex];
                 }
                 break;
@@ -312,5 +328,4 @@ void CPU::executeInstruction(u_int16_t opcode){
    // default:
    //     throw std::invalid_argument('Unknown opcode ');
 }
-
 }

@@ -57,28 +57,34 @@ void Renderer::freeResources(){
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyTexture(texture);
+    delete[] displayArr;
 }
 
 bool Renderer::setPixel(int x,int y){
-    if (x > cols){
-        x -= cols;
+    if (x > (cols-1)){
+        x %= cols;
     } else if (x < 0){
-        x += cols;
+        x = cols + (x % cols);
     }
-    if(y > rows){
-        y -= rows;
+    if(y > (rows-1)){
+        y %= (rows);
     } else if (y < 0){
-        y += rows;
+        y = rows + (y % rows);
     }
-    int pixelLoc = x + (y*cols);
-	//0xFFFFFFFF -> Binary(11111111 11111111 11111111 11111111)    
-    //displayArr[pixelLoc] ^= (Uint32)0xFFFFFFFF;
+        int pixelLoc; 
+    try {
+        pixelLoc = x + (y*cols);
+        if (pixelLoc < 0 || pixelLoc > 2047) throw pixelLoc;
+    }
+    catch( int pixelLoc){
+        std::cout << std::endl << "PixelLoc was outside the allowable bounds: "<< pixelLoc << std::endl << std::endl;
+    }
     displayArr[pixelLoc] ^= 1;
-    return !displayArr[pixelLoc];
+    return !displayArr[pixelLoc];    
 }
 
 void Renderer::clear(){
-    displayArr = new bool[cols*rows];
+    memset(displayArr, 0, rows * cols * sizeof(bool));
 }
 
 void Renderer::render(){
@@ -95,25 +101,15 @@ void Renderer::render(){
                 SDL_RenderFillRect(renderer,&pixelFill);
             }
         }
-        //SDL_RenderPresent(renderer);
-        
-        // SDL_Event event;
-        // while(SDL_PollEvent(&event)){
-            
-        //     switch(event.type){
-        //         case SDL_QUIT:
-        //             quit=true;
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // }
-    //}
-    //freeResources();
-}
+        SDL_RenderPresent(renderer);
+};
 
-void Renderer::testRender(){
-    setPixel(320,160);
-    setPixel(321,160);
-    setPixel(322,160);
-}
+void Renderer::debug_printDisplay(){
+    for (int i = 0; i< rows;i++){
+        std::cout << std::left << std::setw(5) << i;
+        for (int j=0;j<cols;j++){
+            std::cout<< displayArr[j + (i*cols)];
+        }
+        std::cout << std::endl;
+    }
+};

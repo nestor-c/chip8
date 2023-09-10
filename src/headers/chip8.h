@@ -7,25 +7,21 @@
 
 
 class Chip8{
-    public:
-        void init();
-        Chip8();
-        ~Chip8();
-        void eventLoop();
-        bool quit = false;
-		CPU myCPU;
-
-    private:
+        private:
 		Renderer myRenderer;
 		Keyboard myKeyboard;
 		Speaker mySpeaker;
         SDL_Event event;
         SDL_Window* window;
-        void step();
         int fps, fpsInterval;
         unsigned int startTime, now, then, elapsed;
-    protected: 
-
-
+        
+    public:
+        void init();
+        Chip8();
+        ~Chip8();
+        void eventLoop();
+        bool quit;
+		CPU myCPU;
 };
 #endif

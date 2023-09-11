@@ -15,4 +15,6 @@ used to add debugging symbols to the compiled executable.
 I then moved on to learning the cmake build system and learned to compile a basic program. Learned to accomplish the same compilation
 I was doing with the GNU C++ compiler and Clang compiler. 
 
+In debugging the program I gained familiarity with the address sanitizer. 
+
 

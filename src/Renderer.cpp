@@ -21,7 +21,7 @@ Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(col
 
     CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
 
-    CHECK_ERROR(
+    {CHECK_ERROR(
         (window = SDL_CreateWindow
             (
                 "My Window",
@@ -34,9 +34,9 @@ Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(col
         )
              == NULL, 
              SDL_GetError()
-    );
+    );}
 
-    CHECK_ERROR(
+    {CHECK_ERROR(
         (renderer = SDL_CreateRenderer(
                         window, 
                         -1, 
@@ -44,13 +44,16 @@ Renderer::Renderer(int myScale):cols(64),rows(32),scale(myScale),windowWidth(col
                     )
         ) == NULL, 
         SDL_GetError()
-    );
+    );}
 
 	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,windowWidth,windowHeight);
 };
 
 Renderer::~Renderer(){
-    freeResources();
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(texture);
+    delete[] displayArr;
 }
 
 void Renderer::freeResources(){
@@ -61,24 +64,29 @@ void Renderer::freeResources(){
 }
 
 bool Renderer::setPixel(int x,int y){
-    if (x > (cols-1)){
-        x %= cols;
+    // if (x > (cols-1)){
+    //     x %= cols;
+    // } else if (x < 0){
+    //     x = cols + (x % cols);
+    // }
+    // if(y > (rows-1)){
+    //     y %= (rows);
+    // } else if (y < 0){
+    //     y = rows + (y % rows);
+    // }
+    
+    if (x > (cols)){
+        x -= cols;
     } else if (x < 0){
-        x = cols + (x % cols);
+        x += cols;
     }
-    if(y > (rows-1)){
-        y %= (rows);
+    if(y > (rows)){
+        y -= rows;
     } else if (y < 0){
-        y = rows + (y % rows);
+        y += cols;
     }
-        int pixelLoc; 
-    try {
-        pixelLoc = x + (y*cols);
-        if (pixelLoc < 0 || pixelLoc > 2047) throw pixelLoc;
-    }
-    catch( int pixelLoc){
-        std::cout << std::endl << "PixelLoc was outside the allowable bounds: "<< pixelLoc << std::endl << std::endl;
-    }
+
+    int pixelLoc=x + (y*cols);
     displayArr[pixelLoc] ^= 1;
     return !displayArr[pixelLoc];    
 }
@@ -90,14 +98,13 @@ void Renderer::clear(){
 void Renderer::render(){
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
         SDL_RenderClear(renderer);
-       // displayArr[1056]=0;     
         for(int i=0;i<rows*cols;i++){
             if(!displayArr[i]){
                 x = (i%cols)*scale;
                 y = floor(i/cols)*scale;
                 int intScale = (int) scale;
                 SDL_Rect pixelFill = {x,y,intScale,intScale};
-                SDL_SetRenderDrawColor(renderer,0,255,0,255);
+                SDL_SetRenderDrawColor(renderer,0,0,0,255);
                 SDL_RenderFillRect(renderer,&pixelFill);
             }
         }

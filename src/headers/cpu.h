@@ -4,7 +4,7 @@
 #include "Speaker.h"
 #include "Renderer.h"
 #include <vector>
-#include <cstdint>
+#include <cstdlib>
 #include <cmath>
 #include <fstream>
 

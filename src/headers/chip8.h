@@ -15,6 +15,7 @@ class Chip8{
         SDL_Window* window;
         int fps, fpsInterval;
         unsigned int startTime, now, then, elapsed;
+        SDL_Scancode* buttonPressed;
         
     public:
         void init();

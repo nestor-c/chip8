@@ -28,10 +28,18 @@ void Chip8::eventLoop(){
         if (elapsed > fpsInterval){
             myCPU.cycle();
         }
-        
+
         while(SDL_PollEvent(&event)){
-            if(event.type == SDL_QUIT){
-                quit = true;
+            switch (event.type){
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                case SDL_KEYDOWN:
+                    myKeyboard.onKeyDown(event);
+                    break;
+                case SDL_KEYUP:
+                    myKeyboard.onKeyUp(event);
+                    break;
             }
         }
     }

@@ -91,7 +91,7 @@ void CPU::cycle(){
         updateTimers();
     }
 
-    //playSound();
+    playSound();
     cpu_Renderer->render();
 }
 

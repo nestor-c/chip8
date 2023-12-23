@@ -12,9 +12,8 @@ I delved deep into different compiler types used based on OSX or Windows operati
 options available to the linker and compiler such as -I for pointing the compiler to include directories -L for naming the library used and -g 
 used to add debugging symbols to the compiled executable.
 
-I then moved on to learning the cmake build system and learned to compile a basic program. Learned to accomplish the same compilation
-I was doing with the GNU C++ compiler and Clang compiler. 
+I then moved on to learning the cmake build system and learned to compile a basic program. I learned to accomplish the same compilation
+between the GNU C++ compiler and Clang compiler. 
 
-In debugging the program I gained familiarity with the address sanitizer. 
-
+In debugging the program I gained familiarity with the address sanitizer. I also learned basic game development fundamentals like that of the event loop and ways to ensure a specific frame rate is reached.
 
